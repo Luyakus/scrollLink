@@ -13,9 +13,9 @@
 @implementation UIScrollView (Link)
 
 - (YppScrollLink *)slink {
-    if ([self.class isKindOfClass:YppLinkTableView.class] ||
-        [self.class isKindOfClass:YppLinkCollectionView.class] ||
-        [self.class isKindOfClass:YppLinkScrollView.class]) {
+    if ([self isKindOfClass:YppLinkTableView.class] ||
+        [self isKindOfClass:YppLinkCollectionView.class] ||
+        [self isKindOfClass:YppLinkScrollView.class]) {
         return [(YppLinkScrollView *)self link];
     }
     return nil;
