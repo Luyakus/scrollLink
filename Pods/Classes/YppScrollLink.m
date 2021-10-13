@@ -29,7 +29,7 @@
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
     if ([gestureRecognizer isKindOfClass:UIPanGestureRecognizer.class] &&
         [otherGestureRecognizer isKindOfClass:UIPanGestureRecognizer.class]) {
-        return self.scrollView.link.parent.scrollView == otherGestureRecognizer.view;
+        return self.scrollView.slink.parent.scrollView == otherGestureRecognizer.view;
     }
     return NO;
 }
