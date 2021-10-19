@@ -4,21 +4,27 @@
 //
 //  Created by DZ0400843 on 2021/9/23.
 //
-#import "YppLinkScrollView.h"
-#import "YppLinkTableView.h"
-#import "YppLinkCollectionView.h"
 
+#import <objc/runtime.h>
+#import "YppScrollLink+Private.h"
 #import "UIScrollView+Link.h"
 
 @implementation UIScrollView (Link)
+static NSInteger linkKey = 0;
 
-- (YppScrollLink *)slink {
-    if ([self isKindOfClass:YppLinkTableView.class] ||
-        [self isKindOfClass:YppLinkCollectionView.class] ||
-        [self isKindOfClass:YppLinkScrollView.class]) {
-        return [(YppLinkScrollView *)self link];
+- (void)setLink:(YppScrollLink *)link {
+    objc_setAssociatedObject(self, &linkKey, link, OBJC_ASSOCIATION_RETAIN);
+}
+
+- (YppScrollLink *)link {
+    return objc_getAssociatedObject(self, &linkKey);
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    if (self.link) {
+        return [self.link gestureRecognizer:gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:otherGestureRecognizer];
     }
-    return nil;
+    return NO;
 }
 
 @end
