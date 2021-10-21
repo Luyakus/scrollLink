@@ -17,6 +17,9 @@
 
 - (instancetype)initWithScrollView:(UIScrollView *)scrollView {
     if (self = [super initWithScrollView:scrollView]) {
+        if (scrollView.contentOffset.y == 0) {
+            scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x, 0.5);
+        }
         self.lastContentOffset = CGPointZero;
     }
     return self;

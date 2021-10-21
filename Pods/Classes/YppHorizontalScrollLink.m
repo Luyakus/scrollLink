@@ -17,6 +17,9 @@
 
 - (instancetype)initWithScrollView:(UIScrollView *)scrollView {
     if (self = [super initWithScrollView:scrollView]) {
+        if (scrollView.contentOffset.x == 0) {
+            scrollView.contentOffset = CGPointMake(0.5, scrollView.contentOffset.y);
+        }
         self.lastContentOffset = CGPointZero;
     }
     return self;
@@ -72,20 +75,3 @@
     return result;
 }
 @end
-
-/*
- // 多级联动, 未完成
- - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-     if ([gestureRecognizer isKindOfClass:UIPanGestureRecognizer.class] &&
-         [otherGestureRecognizer isKindOfClass:UIPanGestureRecognizer.class]) {
-         if ([otherGestureRecognizer.view isKindOfClass:UIScrollView.class]) {
-             UIScrollView *otherSrollView = (UIScrollView *)otherGestureRecognizer.view;
-             LGScrollLink *otherLink = otherSrollView.link;
-             if ([self.class isEqual:otherLink.class]) {
-                 return YES;
-             }
-         }
-     }
-     return NO;
- }
- */
