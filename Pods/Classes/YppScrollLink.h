@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 typedef NS_ENUM(NSUInteger, YppScrollDirection) {
+    YppScrollDirectionStop,
     YppScrollDirectionForward, // 竖向时向上, 横向时向左
     YppScrollDirectionBackward, // 竖向时向下, 横向时向右
 };

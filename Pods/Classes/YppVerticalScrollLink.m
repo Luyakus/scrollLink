@@ -10,7 +10,6 @@
 
 @interface YppVerticalScrollLink()
 @property (nonatomic, assign) BOOL gestureLinkFail; // 手势联动失效
-
 @end
 
 @implementation YppVerticalScrollLink
@@ -51,7 +50,6 @@
                 } completion:^(BOOL finished) {
                 }];
             }
-            
         }
         self.hasCallScrollDidScroll = YES;
         self.lastContentOffset = scrollView.contentOffset;
@@ -110,8 +108,10 @@
     CGPoint velocity = [gesture velocityInView:self.scrollView];
     if (velocity.y < 0) {
         self.direction = YppScrollDirectionForward;
-    } else {
+    } else if (velocity.y > 0) {
         self.direction = YppScrollDirectionBackward;
+    } else {
+        self.direction = YppScrollDirectionStop;
     }
 }
 
@@ -120,6 +120,8 @@
         self.direction = YppScrollDirectionForward;
     } else if (self.scrollView.contentOffset.y - self.lastContentOffset.y < 0) {
         self.direction = YppScrollDirectionBackward;
+    } else {
+        self.direction = YppScrollDirectionStop;
     }
 }
 

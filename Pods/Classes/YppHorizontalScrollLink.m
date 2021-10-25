@@ -64,8 +64,10 @@
     CGPoint velocity = [gesture velocityInView:self.scrollView];
     if (velocity.x < 0) {
         self.direction = YppScrollDirectionForward;
-    } else {
+    } else if (velocity.x > 0) {
         self.direction = YppScrollDirectionBackward;
+    } else {
+        self.direction = YppScrollDirectionStop;
     }
 }
 
@@ -74,6 +76,8 @@
         self.direction = YppScrollDirectionForward;
     } else if (self.scrollView.contentOffset.x - self.lastContentOffset.x < 0) {
         self.direction = YppScrollDirectionBackward;
+    } else {
+        self.direction = YppScrollDirectionStop;
     }
 }
 
