@@ -60,14 +60,14 @@
         [self detectDirection]; // 动态更新滑动方向
         if (self.direction == YppScrollDirectionForward) { // 向上滑动
             if (!self.arriveTail) { // 没到底
-                self.currentChild.scrollView.contentOffset = CGPointMake(0, 1); // 固定子组件偏移量
+                self.currentChild.scrollView.contentOffset = CGPointMake(self.currentChild.scrollView.contentOffset.x, 0); // 固定子组件偏移量
             } else {
                 
             }
         }
         if (self.direction == YppScrollDirectionBackward) {
             if (self.currentChild.arriveHeader) {
-                self.currentChild.scrollView.contentOffset = CGPointMake(0, 1);
+                self.currentChild.scrollView.contentOffset = CGPointMake(self.currentChild.scrollView.contentOffset.x, 0);
             }
         }
         self.hasCallScrollDidScroll = YES;
