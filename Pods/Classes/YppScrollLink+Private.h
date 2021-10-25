@@ -10,21 +10,12 @@
 NS_ASSUME_NONNULL_BEGIN
 
 
-typedef NS_ENUM(NSUInteger, LGScrollDirection) {
-    LGScrollDirectionInit,
-    LGScrollDirectionStop,
-    LGScrollDirectionForward,
-    LGScrollDirectionBackward,
-};
 
 @interface YppScrollLink ()
-
-// helper property
+@property (nonatomic, assign) BOOL hasCallScrollDidScroll;
 @property (nonatomic, assign) CGPoint lastContentOffset;
+// helper property
 
-@property (nonatomic, assign) LGScrollDirection direction;
-@property (nonatomic, readonly) BOOL arriveHeader;
-@property (nonatomic, readonly) BOOL arriveTail;
 
 @property (nonatomic, weak) UIScrollView *scrollView;
 

@@ -10,10 +10,25 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+
+typedef NS_ENUM(NSUInteger, YppScrollDirection) {
+    YppScrollDirectionForward, // 竖向时向上, 横向时向左
+    YppScrollDirectionBackward, // 竖向时向下, 横向时向右
+};
+
 @interface YppScrollLink : NSObject
+
+@property (nonatomic, weak) YppScrollLink *parent;
+@property (nonatomic, weak) YppScrollLink *currentChild;
+
+@property (nonatomic, assign) YppScrollDirection direction;
+@property (nonatomic, readonly) BOOL arriveHeader;
+@property (nonatomic, readonly) BOOL arriveTail;
+
 // 横向联动时设置
 @property (nonatomic, assign) NSInteger hIndex;
-@property (nonatomic, weak) YppScrollLink *parent;
+
+
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView;
 
