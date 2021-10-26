@@ -9,7 +9,6 @@
 #import "YppVerticalScrollLink.h"
 
 @interface YppVerticalScrollLink()
-@property (nonatomic, assign) BOOL gestureLinkFail; // 手势联动失效
 @end
 
 @implementation YppVerticalScrollLink
