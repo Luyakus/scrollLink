@@ -28,29 +28,6 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (self.parent) { // 子组件处理
         [self detectDirection]; // 动态更新滑动方向
-        if (self.parent.direction == YppScrollDirectionBackward && // 下拉刷新会有回弹, 所以用父容器方向判断
-            self.arriveHeader && // 子组件到顶
-            !self.parent.arriveHeader) { //  父容器没到顶
-            if (self.scrollView.panGestureRecognizer.state == UIGestureRecognizerStatePossible) { // 手指停止拖拽, 惯性动画
-                // 惯性处理
-                [UIView animateWithDuration:0.4
-                                      delay:0
-                                    options:UIViewAnimationOptionCurveEaseOut
-                                 animations:^{
-                    self.parent.scrollView.contentOffset = CGPointMake(self.parent.scrollView.contentOffset.x, 0);
-                } completion:^(BOOL finished) {
-                }];
-            } else if (self.gestureLinkFail) {
-                // 手势联动失效处理
-                [UIView animateWithDuration:1
-                                      delay:0
-                                    options:UIViewAnimationOptionCurveEaseOut
-                                 animations:^{
-                    self.parent.scrollView.contentOffset = CGPointMake(self.parent.scrollView.contentOffset.x, 0);
-                } completion:^(BOOL finished) {
-                }];
-            }
-        }
         self.hasCallScrollDidScroll = YES;
         self.lastContentOffset = scrollView.contentOffset;
     }
@@ -59,8 +36,6 @@
         if (self.direction == YppScrollDirectionForward) { // 向上滑动
             if (!self.arriveTail) { // 没到底
                 self.currentChild.scrollView.contentOffset = CGPointMake(self.currentChild.scrollView.contentOffset.x, 0); // 固定子组件偏移量
-            } else {
-                
             }
         }
         if (self.direction == YppScrollDirectionBackward) {
@@ -68,6 +43,13 @@
                 self.currentChild.scrollView.contentOffset = CGPointMake(self.currentChild.scrollView.contentOffset.x, 0);
             }
         }
+        
+        if (!self.currentChild.arriveHeader) {
+            self.direction = YppScrollDirectionStop;
+            CGFloat maxY = scrollView.contentSize.height - scrollView.bounds.size.height;
+            scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x, maxY);
+        }
+        
         self.hasCallScrollDidScroll = YES;
         self.lastContentOffset = scrollView.contentOffset;
     }
@@ -82,11 +64,6 @@
             if (shouldRecognizeSimulty) {
                 if (self.parent) {
                     self.parent.currentChild = self; // 动态更新 child
-                    // 向下滚动, 子组件没到顶
-                    if (self.direction == YppScrollDirectionBackward && !self.arriveHeader) {
-                        shouldRecognizeSimulty = NO;
-                    }
-                    self.gestureLinkFail = !shouldRecognizeSimulty;
                 }
             }
             return shouldRecognizeSimulty;
