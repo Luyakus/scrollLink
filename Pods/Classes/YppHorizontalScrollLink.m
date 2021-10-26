@@ -60,6 +60,7 @@
 
 
 - (void)detectGestureDirection:(UIPanGestureRecognizer *)gesture {
+    self.drivenByCode = NO;
     self.hasCallScrollDidScroll = NO;
     CGPoint velocity = [gesture velocityInView:self.scrollView];
     if (velocity.x < 0) {

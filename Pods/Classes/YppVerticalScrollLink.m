@@ -9,17 +9,15 @@
 #import "YppVerticalScrollLink.h"
 
 @interface YppVerticalScrollLink()
+@property (nonatomic, assign) CGPoint parentAnchor;
 @end
 
 @implementation YppVerticalScrollLink
 
 - (instancetype)initWithScrollView:(UIScrollView *)scrollView {
     if (self = [super initWithScrollView:scrollView]) {
-        id <UIScrollViewDelegate> delegate = scrollView.delegate;
-        scrollView.delegate = nil; // 防止递归
-        scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x, scrollView.contentOffset.y + 0.5); // 防止第一次下拉刷新失效
-        scrollView.delegate = delegate;
         self.lastContentOffset = CGPointZero;
+        self.parentAnchor = CGPointZero;
     }
     return self;
 }
@@ -27,28 +25,35 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (self.parent) { // 子组件处理
         [self detectDirection]; // 动态更新滑动方向
+        if (!self.drivenByCode) {
+            if (self.direction == YppScrollDirectionBackward) {
+                if (CGPointEqualToPoint(self.parentAnchor, CGPointZero)) {
+                    self.parentAnchor = self.parent.scrollView.contentOffset; // 记录父组件的偏移量
+                }
+                if (!self.arriveHeader) {
+                    self.parent.scrollView.contentOffset = self.parentAnchor;
+                } else {
+                    self.parentAnchor = CGPointZero;
+                }
+            }
+        }
         self.hasCallScrollDidScroll = YES;
         self.lastContentOffset = scrollView.contentOffset;
     }
     if (self.currentChild) { // 父容器处理
         [self detectDirection]; // 动态更新滑动方向
-        if (self.direction == YppScrollDirectionForward) { // 向上滑动
-            if (!self.arriveTail) { // 没到底
-                self.currentChild.scrollView.contentOffset = CGPointMake(self.currentChild.scrollView.contentOffset.x, 0); // 固定子组件偏移量
+        if (!self.drivenByCode) {
+            if (self.direction == YppScrollDirectionForward) { // 向上滑动
+                if (!self.arriveTail) { // 没到底
+                    self.currentChild.scrollView.contentOffset = CGPointMake(self.currentChild.scrollView.contentOffset.x, 0); // 固定子组件偏移量
+                }
+            }
+            if (self.direction == YppScrollDirectionBackward) {
+                if (self.currentChild.arriveHeader) {
+                    self.currentChild.scrollView.contentOffset = CGPointMake(self.currentChild.scrollView.contentOffset.x, 0);
+                }
             }
         }
-        if (self.direction == YppScrollDirectionBackward) {
-            if (self.currentChild.arriveHeader) {
-                self.currentChild.scrollView.contentOffset = CGPointMake(self.currentChild.scrollView.contentOffset.x, 0);
-            }
-        }
-        
-        if (!self.currentChild.arriveHeader) {
-            self.direction = YppScrollDirectionStop;
-            CGFloat maxY = scrollView.contentSize.height - scrollView.bounds.size.height;
-            scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x, maxY);
-        }
-        
         self.hasCallScrollDidScroll = YES;
         self.lastContentOffset = scrollView.contentOffset;
     }
@@ -81,6 +86,7 @@
 
 - (void)detectGestureDirection:(UIPanGestureRecognizer *)gesture {
     self.hasCallScrollDidScroll = NO;
+    self.drivenByCode = NO;
     CGPoint velocity = [gesture velocityInView:self.scrollView];
     if (velocity.y < 0) {
         self.direction = YppScrollDirectionForward;
