@@ -25,15 +25,17 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (self.parent) { // 子组件处理
         [self detectDirection]; // 动态更新滑动方向
-        if (!self.drivenByCode) {
-            if (self.direction == YppScrollDirectionBackward) {
-                if (CGPointEqualToPoint(self.parentAnchor, CGPointZero)) {
-                    self.parentAnchor = self.parent.scrollView.contentOffset; // 记录父组件的偏移量
+        if (!self.drivenByCode) { // 只对手势联动做处理
+            if (self.direction == YppScrollDirectionForward) {
+                if (!self.parent.arriveTail && !self.parent.arriveHeader) {
+                    self.scrollView.contentOffset = CGPointMake(self.scrollView.contentOffset.x, 0);
                 }
+            }
+
+            if (self.direction == YppScrollDirectionBackward) {
                 if (!self.arriveHeader) {
-                    self.parent.scrollView.contentOffset = self.parentAnchor;
                 } else {
-                    self.parentAnchor = CGPointZero;
+                    self.parentAnchor = CGPointZero; // 到顶后父组件 anchor 设置为 0;
                 }
             }
         }
@@ -42,16 +44,14 @@
     }
     if (self.currentChild) { // 父容器处理
         [self detectDirection]; // 动态更新滑动方向
-        if (!self.drivenByCode) {
-            if (self.direction == YppScrollDirectionForward) { // 向上滑动
-                if (!self.arriveTail) { // 没到底
-                    self.currentChild.scrollView.contentOffset = CGPointMake(self.currentChild.scrollView.contentOffset.x, 0); // 固定子组件偏移量
+        if (!self.drivenByCode) { // 只对手势联动做处理
+            if (!self.currentChild.arriveHeader && self.currentChild.direction == YppScrollDirectionBackward) { // 下拉时吸顶处理
+                self.direction = YppScrollDirectionStop;
+                YppVerticalScrollLink *link = (YppVerticalScrollLink *)self.currentChild;
+                if (CGPointEqualToPoint(CGPointZero, link.parentAnchor)) {
+                    link.parentAnchor = self.lastContentOffset;
                 }
-            }
-            if (self.direction == YppScrollDirectionBackward) {
-                if (self.currentChild.arriveHeader) {
-                    self.currentChild.scrollView.contentOffset = CGPointMake(self.currentChild.scrollView.contentOffset.x, 0);
-                }
+                scrollView.contentOffset = link.parentAnchor;
             }
         }
         self.hasCallScrollDidScroll = YES;
@@ -98,9 +98,10 @@
 }
 
 - (void)calculateDirection {
-    if (self.scrollView.contentOffset.y - self.lastContentOffset.y > 0) {
+    CGFloat y =  MAX(self.scrollView.contentOffset.y, 0) - MAX(self.lastContentOffset.y, 0); // 屏蔽回弹效果
+    if (y > 0) {
         self.direction = YppScrollDirectionForward;
-    } else if (self.scrollView.contentOffset.y - self.lastContentOffset.y < 0) {
+    } else if (y < 0) {
         self.direction = YppScrollDirectionBackward;
     } else {
         self.direction = YppScrollDirectionStop;
