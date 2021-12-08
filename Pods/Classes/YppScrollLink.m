@@ -7,6 +7,8 @@
 
 #import "YppScrollLink+Private.h"
 #import "UIScrollView+Link.h"
+#import "YppVerticalScrollLink.h"
+#import "YppHorizontalScrollLink.h"
 #import "YppScrollLink.h"
 
 @interface YppScrollLink() <UIGestureRecognizerDelegate>
@@ -30,5 +32,29 @@
     return NO;
 }
 
+- (void)detectParent {
+    UIView *superView = self.scrollView.superview;
+    while (superView) {
+        if ([superView isKindOfClass:UIScrollView.class]) {
+            YppScrollLink *link = [(UIScrollView *)superView link];
+            if (link) {
+                if (([link isKindOfClass:YppVerticalScrollLink.class] && [self isKindOfClass:YppVerticalScrollLink.class]) ||
+                    ([link isKindOfClass:YppHorizontalScrollLink.class] && [self isKindOfClass:YppHorizontalScrollLink.class])) {
+                    self.parent = link;
+                    break;
+                } else {
+                    superView = superView.superview;
+                    continue;
+                }
+            } else {
+                superView = superView.superview;
+                continue;
+            }
+        } else {
+            superView = superView.superview;
+            continue;
+        }
+    }
+}
 
 @end

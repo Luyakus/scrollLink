@@ -33,6 +33,9 @@
     if ([gestureRecognizer isKindOfClass:UIPanGestureRecognizer.class] && // 判断是不是滑动手势
         [otherGestureRecognizer isKindOfClass:UIPanGestureRecognizer.class]) { // 判断是不是滑动手势
         if (gestureRecognizer.delegate == (id<UIGestureRecognizerDelegate>)self.scrollView) { // 判断是不是自己 scrollView 上的滑动手势
+            if (!self.currentChild && !self.parent) {
+                [self detectParent];
+            }
             [self detectGestureDirection:(UIPanGestureRecognizer *)gestureRecognizer];
             BOOL shouldRecognizeSimulty = self.scrollView.link.parent.scrollView == otherGestureRecognizer.view;
             if (shouldRecognizeSimulty && self.parent) {

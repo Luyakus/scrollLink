@@ -21,7 +21,7 @@ typedef NS_ENUM(NSUInteger, YppScrollDirection) {
 @property (nonatomic, assign) BOOL drivenByCode; // 如果代码更新 contentOffset 设置为YES;
 
 @property (nonatomic, weak) YppScrollLink *parent;
-@property (nonatomic, weak) YppScrollLink *currentChild;
+@property (nonatomic, weak) YppScrollLink *currentChild; // 只有手势驱动时会自动更新, 其他情况下请自行更新
 
 @property (nonatomic, assign) YppScrollDirection direction;
 @property (nonatomic, readonly) BOOL arriveHeader;
@@ -39,3 +39,4 @@ typedef NS_ENUM(NSUInteger, YppScrollDirection) {
 @end
 
 NS_ASSUME_NONNULL_END
+
