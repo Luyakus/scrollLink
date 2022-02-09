@@ -28,7 +28,7 @@
         if (!self.drivenByCode) { // 只对手势联动做处理
             if (self.direction == YppScrollDirectionForward) {
                 if (!self.parent.arriveTail && !self.parent.arriveHeader) {
-                    self.scrollView.contentOffset = CGPointMake(self.scrollView.contentOffset.x, 0);
+                    self.scrollView.contentOffset = CGPointMake(self.scrollView.contentOffset.x, 0 - self.scrollView.contentInset.top);
                 }
             }
 
@@ -113,12 +113,12 @@
 
 - (BOOL)arriveTail {
     CGFloat maxY = self.scrollView.contentSize.height - self.scrollView.bounds.size.height;
-    BOOL result = self.scrollView.contentOffset.y >= maxY - 2;
+    BOOL result = self.scrollView.contentOffset.y - self.scrollView.contentInset.top >= maxY - 2;
     return result;
 }
 
 - (BOOL)arriveHeader {
-    BOOL result = self.scrollView.contentOffset.y <= 2;
+    BOOL result = self.scrollView.contentOffset.y - self.scrollView.contentInset.top <= 2;
     return result;
 }
 

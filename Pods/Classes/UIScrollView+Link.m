@@ -17,6 +17,7 @@
     if (!vLinkDelegate) return;
     self.delegate = vLinkDelegate;
     self.link = [[YppVerticalScrollLink alloc] initWithScrollView:self];
+    [self.link addScrollDelegateMethodDynamic:vLinkDelegate];
 }
 
 - (id<UIScrollViewDelegate>)vLinkDelegate {

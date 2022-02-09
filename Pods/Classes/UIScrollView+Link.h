@@ -14,7 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) id <UIScrollViewDelegate> hLinkDelegate;
 
 @property (nonatomic, strong) YppScrollLink *link;
-
 @end
 
 NS_ASSUME_NONNULL_END

@@ -16,7 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) YppScrollLink *parent;
 @property (nonatomic, weak) YppScrollLink *currentChild; // 只有手势驱动时会自动更新, 其他情况下请自行更新
 
-//- (void)linkScrollView:(UIScrollView *)scrollView;
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView;
 - (instancetype)initWithScrollView:(UIScrollView *)scrollView;
 

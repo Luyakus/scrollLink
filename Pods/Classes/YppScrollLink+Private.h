@@ -31,7 +31,7 @@ typedef NS_ENUM(NSUInteger, YppScrollDirection) {
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView;
 - (void)link_scrollViewDidScroll:(UIScrollView *)scrollView;
-
+- (void)addScrollDelegateMethodDynamic:(id<UIScrollViewDelegate>)linkDelegate;
 @end
 
 NS_ASSUME_NONNULL_END
