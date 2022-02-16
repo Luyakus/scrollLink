@@ -23,6 +23,7 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     // 横滑联动都是一下一下的所以不需要控制偏移量, 使用手势就可以
+    if (![self isKindOfClass:YppScrollLink.class]) return;
     [self detectDirection];
     self.hasCallScrollDidScroll = YES;
     self.lastContentOffset = scrollView.contentOffset;

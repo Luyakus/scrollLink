@@ -23,6 +23,7 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (![self isKindOfClass:YppScrollLink.class]) return;
     if (self.parent) { // 子组件处理
         [self detectDirection]; // 动态更新滑动方向
         if (!self.drivenByCode) { // 只对手势联动做处理
