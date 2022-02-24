@@ -65,12 +65,13 @@
         currentMethod = class_getInstanceMethod([YppScrollLink class], linkScrollSel);
         BOOL isAddMethod = class_addMethod([linkDelegate class], linkScrollSel, method_getImplementation(currentMethod), method_getTypeEncoding(currentMethod));
         if (isAddMethod) {
-            YPPLogInfo(@"%@添加方法成功", @"lg_scrollViewDidScroll");
+            YPPLogInfo(@"%@添加方法成功", @"link_scrollViewDidScroll");
         }
         currentMethod = class_getInstanceMethod([linkDelegate class], linkScrollSel);
     }
     if (originMethod && currentMethod) {
         method_exchangeImplementations(originMethod, currentMethod);
+        YPPLogInfo(@"scrollViewDidScroll link_scrollViewDidScroll 交换方法成功 %@", NSStringFromClass([linkDelegate class]));
     } else {
         YPPLogInfo(@"交换方法失败 %@", NSStringFromClass([linkDelegate class]));
     }

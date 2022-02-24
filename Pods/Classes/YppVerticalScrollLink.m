@@ -102,7 +102,7 @@
 }
 
 - (void)calculateDirection {
-    CGFloat y =  MAX(self.scrollView.contentOffset.y, 0) - MAX(self.lastContentOffset.y, 0); // 屏蔽回弹效果
+    CGFloat y =  MAX(self.scrollView.contentOffset.y + self.scrollView.contentInset.top, 0) - MAX(self.lastContentOffset.y + self.scrollView.contentInset.top, 0); // 屏蔽回弹效果
     if (y > 0) {
         self.direction = YppScrollDirectionForward;
     } else if (y < 0) {
@@ -113,13 +113,20 @@
 }
 
 - (BOOL)arriveTail {
-    CGFloat maxY = self.scrollView.contentSize.height - self.scrollView.bounds.size.height;
-    BOOL result = self.scrollView.contentOffset.y - self.scrollView.contentInset.top >= maxY - 2;
-    return result;
+    if (@available(iOS 11.0, *)) {
+        CGFloat maxY = self.scrollView.contentSize.height - self.scrollView.bounds.size.height + self.scrollView.adjustedContentInset.bottom;
+        BOOL result = self.scrollView.contentOffset.y >= maxY - 2;
+        return result;
+    } else {
+        // Fallback on earlier versions
+        CGFloat maxY = self.scrollView.contentSize.height - self.scrollView.bounds.size.height;
+        BOOL result = self.scrollView.contentOffset.y >= maxY - 2;
+        return result;
+    }
 }
 
 - (BOOL)arriveHeader {
-    BOOL result = self.scrollView.contentOffset.y - self.scrollView.contentInset.top <= 2;
+    BOOL result = self.scrollView.contentOffset.y + self.scrollView.contentInset.top <= 2;
     return result;
 }
 
