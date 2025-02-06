@@ -15,7 +15,4 @@ Pod::Spec.new do |s|
 
   s.source_files = 'Pods/Classes/**/*.{h,m}'
   
-  
-  s.dependency 'YPPLog'
-
 end
