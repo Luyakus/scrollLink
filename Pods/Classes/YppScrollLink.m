@@ -5,7 +5,6 @@
 //  Created by DZ0400843 on 2021/9/22.
 //
 #import <objc/runtime.h>
-#import "YPPLog.h"
 #import "YppScrollLink+Private.h"
 #import "UIScrollView+Link.h"
 #import "YppVerticalScrollLink.h"
@@ -56,7 +55,7 @@
         originMethod = class_getInstanceMethod([YppScrollLink class], scrollSel);
         BOOL isAddMethod = class_addMethod([linkDelegate class], scrollSel, method_getImplementation(originMethod), method_getTypeEncoding(originMethod));
         if (isAddMethod) {
-            YPPLogInfo(@"%@添加方法成功", @"scrollViewDidScroll");
+            NSLog(@"%@添加方法成功", @"scrollViewDidScroll");
         }
         originMethod = class_getInstanceMethod([linkDelegate class], scrollSel);
     }
@@ -65,15 +64,15 @@
         currentMethod = class_getInstanceMethod([YppScrollLink class], linkScrollSel);
         BOOL isAddMethod = class_addMethod([linkDelegate class], linkScrollSel, method_getImplementation(currentMethod), method_getTypeEncoding(currentMethod));
         if (isAddMethod) {
-            YPPLogInfo(@"%@添加方法成功", @"link_scrollViewDidScroll");
+            NSLog(@"%@添加方法成功", @"link_scrollViewDidScroll");
         }
         currentMethod = class_getInstanceMethod([linkDelegate class], linkScrollSel);
     }
     if (originMethod && currentMethod) {
         method_exchangeImplementations(originMethod, currentMethod);
-        YPPLogInfo(@"scrollViewDidScroll link_scrollViewDidScroll 交换方法成功 %@", NSStringFromClass([linkDelegate class]));
+        NSLog(@"scrollViewDidScroll link_scrollViewDidScroll 交换方法成功 %@", NSStringFromClass([linkDelegate class]));
     } else {
-        YPPLogInfo(@"交换方法失败 %@", NSStringFromClass([linkDelegate class]));
+        NSLog(@"交换方法失败 %@", NSStringFromClass([linkDelegate class]));
     }
 }
 
